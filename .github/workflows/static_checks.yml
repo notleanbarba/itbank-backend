@@ -19,27 +19,24 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.WORKFLOW_ACCESS_KEY }}
-      - name: Set up Node
-        uses: actions/setup-node@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          node-version: 20
-          cache: "npm"
-      - name: Install dependencies
-        run: npm ci
+          python-version: "3.12"
+      - name: Install requirements
+        run: true # TODO: Install python requirements
       - name: Checking linting
-        run: npm run lint
-      - name: Checking TypeScript types
-        run: npm run types
+        run: true # TODO: Check linting
       - name: Checking if buildable
-        run: npm run test_build
+        run: true # TODO: Check build
       - name: Checking formatting
         id: check_format
         continue-on-error: true
-        run: npm run check_format
+        run: true # TODO: Check formatting
       - name: Format PR
         id: format
         if: steps.check_format.outcome == 'failure'
-        run: npm run format
+        run: true # TODO: Auto format code
       - name: Commit format
         id: commit
         if: steps.format.outcome == 'success'
