@@ -1,0 +1,25 @@
+name: Delete branch
+
+on:
+  pull_request:
+    branches: [develop]
+    types: [closed]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  delete_branch:
+    runs-on: ubuntu-latest
+    if: github.head_ref != 'refs/heads/develop' || github.head_ref != 'refs/heads/master'
+    steps:
+      - name: Delete branch
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.git.deleteRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `heads/${context.payload.pull_request.head.ref}`,
+            })

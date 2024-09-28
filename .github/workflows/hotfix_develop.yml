@@ -1,0 +1,37 @@
+name: Hotfix to develop
+on:
+  pull_request:
+    branches: [master]
+    types: [closed]
+
+jobs:
+  merge-hotfix-to-develop:
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.pull_request.labels.*.name, 'hotfix')
+    timeout-minutes: 2
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set Git config
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "Github Actions"
+      - name: Merge master back to develop
+        run: |
+          git fetch --unshallow
+          git checkout develop
+          git pull
+          git merge --no-ff master -m "Auto-merge master back to develop"
+          git push
+      - name: Delete branch
+        uses: SvanBoxel/delete-merged-branch@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Delete branch
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.git.deleteRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `heads/${context.payload.pull_request.head.ref}`,
+            })

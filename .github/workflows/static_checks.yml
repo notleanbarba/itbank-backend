@@ -1,0 +1,58 @@
+name: Static checks
+
+on:
+  pull_request:
+    branches: ["master", "develop"]
+    types: [opened, ready_for_review]
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+jobs:
+  static_checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.WORKFLOW_ACCESS_KEY }}
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci
+      - name: Checking linting
+        run: npm run lint
+      - name: Checking TypeScript types
+        run: npm run types
+      - name: Checking if buildable
+        run: npm run test_build
+      - name: Checking formatting
+        id: check_format
+        continue-on-error: true
+        run: npm run check_format
+      - name: Format PR
+        id: format
+        if: steps.check_format.outcome == 'failure'
+        run: npm run format
+      - name: Commit format
+        id: commit
+        if: steps.format.outcome == 'success'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Auto formatting codebase
+          branch: ${{ github.head_ref }}
+      - if: steps.commit.outcome == 'success'
+        uses: actions/labeler@v5
+        with:
+          configuration-path: ".github/formatter.yml"
+      - name: Mark as draft
+        if: steps.commit.outcome == 'success'
+        uses: voiceflow/draft-pr@latest
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,27 @@
+name: Prevent branch split
+
+on:
+  pull_request:
+    branches: ["develop"]
+
+permissions:
+  contents: read
+
+jobs:
+  prevent_split:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pull all branches
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: "0"
+      - name: Checkout develop
+        run: git checkout develop
+      - name: Checkout master
+        run: git checkout master
+      - name: Set Git config
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "Github Actions"
+      - name: Develop mergeable to master
+        run: git merge --no-commit --no-ff develop

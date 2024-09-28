@@ -1,0 +1,14 @@
+name: labeler
+
+on: pull_request
+
+permissions:
+  pull-requests: write
+
+jobs:
+  labeler:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Auto label
+        id: label-PR
+        uses: actions/labeler@v5

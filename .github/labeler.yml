@@ -1,0 +1,8 @@
+hotfix:
+  - all:
+      - base-branch: ["master"]
+      - head-branch: ["[^develop]"]
+release:
+  - all:
+      - base-branch: ["master"]
+      - head-branch: ["develop"]
