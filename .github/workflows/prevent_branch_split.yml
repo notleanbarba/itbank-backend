@@ -2,7 +2,7 @@ name: Prevent branch split
 
 on:
   pull_request:
-    branches: ["develop"]
+    branches: ["dev"]
 
 permissions:
   contents: read
@@ -15,8 +15,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: "0"
-      - name: Checkout develop
-        run: git checkout develop
+      - name: Checkout dev
+        run: git checkout dev
       - name: Checkout master
         run: git checkout master
       - name: Set Git config
@@ -24,4 +24,4 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "Github Actions"
       - name: Develop mergeable to master
-        run: git merge --no-commit --no-ff develop
+        run: git merge --no-commit --no-ff dev

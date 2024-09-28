@@ -2,7 +2,7 @@ name: Static checks
 
 on:
   pull_request:
-    branches: ["master", "develop"]
+    branches: ["master", "dev"]
     types: [opened, ready_for_review]
 
 permissions:

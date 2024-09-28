@@ -2,7 +2,7 @@ name: Delete branch
 
 on:
   pull_request:
-    branches: [develop]
+    branches: [dev]
     types: [closed]
 
 permissions:
@@ -12,7 +12,7 @@ permissions:
 jobs:
   delete_branch:
     runs-on: ubuntu-latest
-    if: github.head_ref != 'refs/heads/develop' || github.head_ref != 'refs/heads/master'
+    if: github.head_ref != 'refs/heads/dev' || github.head_ref != 'refs/heads/master'
     steps:
       - name: Delete branch
         uses: actions/github-script@v5
