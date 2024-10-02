@@ -2,7 +2,7 @@
 """
 Filter a list of checks in csv format to standard output or file.
 
-Command: python listado_cheques.py input_file dni output check_type -s check_state* -d date_range*
+Command: python listado_cheques.py dni output check_type input_file -s check_state* -d date_range*
 
 * input_file: Indicate the path to input file. (Supported types: csv)
 * dni:  Indicate the dni value to file. It has to be a string of 8 digits
@@ -28,7 +28,7 @@ from tabulate import tabulate
 
 def limpiar_espacios(fila):
     """
-    Función para eliminar los espacios en blanco alrededor de los valores en cada fila.
+    Elimina los espacios en blanco alrededor de cada valor en una fila del CSV.
     """
     return [elemento.strip() for elemento in fila]
 
@@ -50,7 +50,7 @@ def validar_cheques_duplicados(cheques):
 
 def validar_fechas_cheques(cheques):
     """
-    Verifica que los valores de FechaPago en los cheques sean válidos (numéricos).
+    Verifica que los valores en la columna de FechaPago (índice 7) sean válidos (numéricos).
     """
     for cheque in cheques:
         try:
@@ -71,10 +71,10 @@ if __name__ == "__main__":
         sys.exit(1)
 
     # Asignar correctamente los argumentos
-    file_path = cli_args[1]  
-    dni = cli_args[2]        
-    output = cli_args[3]     
-    check_type = cli_args[4].lower()  
+    file_path = cli_args[-1]  
+    dni = cli_args[1]        
+    output = cli_args[2]     
+    check_type = cli_args[3].lower()  
     
     print(f"Intentando abrir el archivo: {file_path}")  
 
