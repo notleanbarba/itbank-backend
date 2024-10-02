@@ -40,7 +40,7 @@ def validar_cheques_duplicados(cheques):
     """
     cheques_unicos = set()
     for cheque in cheques:
-        key = (cheque[0], cheque[3])  # (NroCheque, NumeroCuentaOrigen)
+        key = (cheque[0], cheque[3])  
         if key in cheques_unicos:
             print(f"Error: Cheque duplicado encontrado con NroCheque {cheque[0]} y cuenta {cheque[3]}")
             sys.exit(1)
@@ -71,12 +71,12 @@ if __name__ == "__main__":
         sys.exit(1)
 
     # Asignar correctamente los argumentos
-    file_path = cli_args[1]  # Este debe ser el archivo CSV
-    dni = cli_args[2]        # Este debe ser el DNI
-    output = cli_args[3]     # Este es la salida (stdout o file)
-    check_type = cli_args[4].lower()  # Tipo de cheque
+    file_path = cli_args[1]  
+    dni = cli_args[2]        
+    output = cli_args[3]     
+    check_type = cli_args[4].lower()  
     
-    print(f"Intentando abrir el archivo: {file_path}")  # Depuración: Imprime la ruta del archivo
+    print(f"Intentando abrir el archivo: {file_path}")  
 
     # Verificar que los argumentos obligatorios son válidos
     possible_outputs = {"stdout", "file"}
@@ -105,7 +105,6 @@ if __name__ == "__main__":
             print("Error:", e)
             sys.exit(1)
 
-    # Verificar si se especifica el rango de fechas
     if "-d" in cli_args:
         raw_date_range = cli_args[cli_args.index("-d") + 1]
         try:
@@ -126,13 +125,12 @@ if __name__ == "__main__":
             print("Error:", e)
             sys.exit(1)
 
-    # Abrir el archivo CSV y cargar los datos
     with open(file_path, "r", encoding="utf-8") as input_file:
         data = csv.reader(input_file, delimiter=",", skipinitialspace=True)
-        header = limpiar_espacios(next(data))  # Limpiar los espacios en el encabezado
+        header = limpiar_espacios(next(data)) 
 
         # Validar cheques duplicados y fechas de los cheques
-        cheques = [limpiar_espacios(fila) for fila in data]  # Limpiar espacios en las filas
+        cheques = [limpiar_espacios(fila) for fila in data] 
         validar_cheques_duplicados(cheques)
         validar_fechas_cheques(cheques)
 
