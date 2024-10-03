@@ -2,7 +2,7 @@
 """
 Filter a list of checks in csv format to standard output or file.
 
-Command: python listado_cheques.py dni output check_type input_file -s check_state* -d date_range*
+Command: python listado_cheques.py input_file dni output check_type -s check_state* -d date_range*
 
 * input_file: Indicate the path to input file. (Supported types: csv)
 * dni:  Indicate the dni value to file. It has to be a string of 8 digits
@@ -26,42 +26,35 @@ from time import mktime, time
 from tabulate import tabulate
 
 
-def limpiar_espacios(fila):
-    """
-    Elimina los espacios en blanco alrededor de cada valor en una fila del CSV.
-    """
-    return [elemento.strip() for elemento in fila]
-
-
-def validar_cheques_duplicados(cheques):
+def validar_cheques_duplicados(checks):
     """
     Verifica si hay cheques duplicados en el archivo.
     Un cheque es duplicado si tiene el mismo número de cheque y la misma cuenta de origen.
     """
-    cheques_unicos = set()
-    for cheque in cheques:
-        key = (cheque[0], cheque[3])  
-        if key in cheques_unicos:
-            print(f"Error: Cheque duplicado encontrado con NroCheque {cheque[0]} y cuenta {cheque[3]}")
+    unique_checks = set()
+    for check in checks:
+        key = (check[0], check[3])  # (NroCheque, NumeroCuentaOrigen)
+        if key in unique_checks:
+            print(f"Error: Cheque duplicado encontrado con NroCheque {check[0]} y cuenta {check[3]}")
             sys.exit(1)
         else:
-            cheques_unicos.add(key)
+            unique_checks.add(key)
 
 
-def validar_fechas_cheques(cheques):
+def validar_fechas_cheques(checks):
     """
-    Verifica que los valores en la columna de FechaPago (índice 7) sean válidos (numéricos).
+    Verifica que los valores de FechaPago en los cheques sean válidos (numéricos).
     """
-    for cheque in cheques:
+    for check in checks:
         try:
-            assert cheque[7].isnumeric(), f"Invalid FechaPago in cheque {cheque[0]}"
+            assert check[7].isnumeric(), f"Invalid FechaPago in cheque {check[0]}"
         except AssertionError as e:
             print("Error:", e)
             sys.exit(1)
 
 
 if __name__ == "__main__":
-    # Cargar los argumentos de línea de comandos
+    # Load arguments in command
     cli_args = sys.argv
 
     try:
@@ -70,15 +63,12 @@ if __name__ == "__main__":
         print("Error:", e)
         sys.exit(1)
 
-    # Asignar correctamente los argumentos
     file_path = cli_args[-1]  
-    dni = cli_args[1]        
+    dni = cli_args[1]       
     output = cli_args[2]     
-    check_type = cli_args[3].lower()  
+    check_type = cli_args[3].lower() 
     
-    print(f"Intentando abrir el archivo: {file_path}")  
-
-    # Verificar que los argumentos obligatorios son válidos
+    # Verify that required argumentes are valid
     possible_outputs = {"stdout", "file"}
     possible_check_types = {"emitido", "depositado"}
 
@@ -95,7 +85,7 @@ if __name__ == "__main__":
     check_state = None
     date_range = [0, 0]
 
-    # Verificar si se especifica el estado del cheque
+    # Verify if state is specified
     if "-s" in cli_args:
         check_state = cli_args[cli_args.index("-s") + 1]
         possible_check_states = {"pendiente", "aprobado", "rechazado"}
@@ -105,6 +95,7 @@ if __name__ == "__main__":
             print("Error:", e)
             sys.exit(1)
 
+    # Verify if date is specified
     if "-d" in cli_args:
         raw_date_range = cli_args[cli_args.index("-d") + 1]
         try:
@@ -125,16 +116,17 @@ if __name__ == "__main__":
             print("Error:", e)
             sys.exit(1)
 
+    # Open CSV and load data
     with open(file_path, "r", encoding="utf-8") as input_file:
         data = csv.reader(input_file, delimiter=",", skipinitialspace=True)
-        header = limpiar_espacios(next(data)) 
+        header = next(data)
+         
+        # Validate duplicated checks
+        checks = list(data)  
+        validar_cheques_duplicados(checks)
+        validar_fechas_cheques(checks)
 
-        # Validar cheques duplicados y fechas de los cheques
-        cheques = [limpiar_espacios(fila) for fila in data] 
-        validar_cheques_duplicados(cheques)
-        validar_fechas_cheques(cheques)
-
-        # Filtrar los cheques por DNI, tipo, estado y rango de fechas
+        # Filter DNI, type, state and date
         filtered_data = list(
             filter(
                 lambda x: ((x[8] == dni) & (x[10].lower() == check_type))
@@ -143,27 +135,27 @@ if __name__ == "__main__":
                     (date_range == [0, 0])
                     | (date_range[0] <= int(x[7]) <= date_range[1])
                 ),
-                cheques,
+                checks,
             )
         )
 
-        # Si el resultado se guarda en archivo
+        # If result is loaded in to file
         if output == "file":
             timestamp_actual = int(time())
-            nombre_archivo = f"{dni}_{timestamp_actual}.csv"
-            with open(nombre_archivo, "w", encoding="utf-8") as output_file:
+            file_name = f"{dni}_{timestamp_actual}.csv"
+            with open(file_name, "w", encoding="utf-8") as output_file:
                 output_csv = csv.writer(output_file, delimiter=",")
                 output_csv.writerow(header)
                 output_csv.writerows(filtered_data)
-                print(f"Success: Output saved to {nombre_archivo}")
+                print(f"Success: Output saved to {file_name}")
                 sys.exit(0)
 
-        # Si no hay resultados
+        # If is not data
         if len(filtered_data) == 0:
             print("No results")
             sys.exit(0)
 
-        # Mostrar los resultados en pantalla
+        # Show results
         print("Results:")
         print(tabulate([header] + filtered_data))
         sys.exit(0)
