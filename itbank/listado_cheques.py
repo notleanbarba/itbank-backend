@@ -2,7 +2,7 @@
 """
 Filter a list of checks in csv format to standard output or file.
 
-Command: python listado_cheques.py input_file dni output check_type -s check_state* -d date_range*
+Command: itbank checks filter dni output check_type -s check_state* -d date_range* input_file 
 
 * input_file: Indicate the path to input file. (Supported types: csv)
 * dni:  Indicate the dni value to file. It has to be a string of 8 digits
@@ -19,28 +19,30 @@ Arguments with * are optionals.
 """
 
 import sys
+import os
 import csv
 from time import time
 from tabulate import tabulate
-from modules.checks import filter_checks
+
+argv = sys.argv
 
 OUTPUT_TYPES = {"stdout", "file"}
 
 if __name__ == "__main__":
-    # Load arguments in command
-    cli_args = sys.argv
+    sys.path.append(os.getcwd())
+    from itbank.checks import filter_checks
 
     try:
         assert (
-            len(cli_args)
+            len(argv)
             > 4
             # pylint: disable-next=line-too-long
         ), "Missing arguments. Expected: python listado_cheques.py [dni] [output] [check_type] [input_file]"
 
-        file_path = cli_args[-1]
-        dni = cli_args[1]
-        output = cli_args[2]
-        check_type = cli_args[3].lower()
+        file_path = argv[-1]
+        dni = argv[1]
+        output = argv[2]
+        check_type = argv[3].lower()
 
         # Verify that output argument is valid
         assert output in OUTPUT_TYPES, f"Wrong argument. Output must be {OUTPUT_TYPES}"
@@ -54,12 +56,12 @@ if __name__ == "__main__":
     date_range = None
 
     # Verify if state is specified
-    if "-s" in cli_args:
-        check_state = cli_args[cli_args.index("-s") + 1]
+    if "-s" in argv:
+        check_state = argv[argv.index("-s") + 1]
 
     # Verify if date is specified
-    if "-d" in cli_args:
-        date_range = cli_args[cli_args.index("-d") + 1]
+    if "-d" in argv:
+        date_range = argv[argv.index("-d") + 1]
 
     # Open CSV and load data
     with open(file_path, "r", encoding="utf-8") as input_file:
@@ -79,12 +81,12 @@ if __name__ == "__main__":
 
             # If result is saved to file
             if output == "file":
-                FILE_NAME = f"{dni}_{int(time())}.csv"
-                with open(FILE_NAME, "w", encoding="utf-8") as output_file:
+                file_name = f"{dni}_{int(time())}.csv"
+                with open(file_name, "w", encoding="utf-8") as output_file:
                     output_csv = csv.writer(output_file, delimiter=",")
                     output_csv.writerow(header)
                     output_csv.writerows(filtered_data)
-                    print(f"Success: Output saved to {FILE_NAME}")
+                    print(f"Success: Output saved to {file_name}")
                     sys.exit(0)
 
             # Show results
