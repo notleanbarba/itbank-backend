@@ -1,62 +1,110 @@
-import json
-
 class Cliente:
-    def __init__(self, nombre, dni, direccion, numero_cliente):
+    def __init__(self, nombre, apellido, dni, tipo, total_tarjetas_de_credito, total_chequeras, saldo_en_cuenta, saldo_en_dolares, transacciones):
         self.nombre = nombre
+        self.apellido = apellido
         self.dni = dni
-        self.direccion = direccion
-        self.numero_cliente = numero_cliente
-    
-    def __str__(self):
-        return f"{self.nombre} (DNI: {self.dni})"
+        self.tipo = tipo
+        self.total_tarjetas_de_credito = total_tarjetas_de_credito
+        self.total_chequeras = total_chequeras
+        self.saldo_en_cuenta = saldo_en_cuenta
+        self.saldo_en_dolares = saldo_en_dolares
+        self.transacciones = transacciones
 
 class Transaccion:
-    def __init__(self,numero,cliente,tipo_operacion,estado,monto,fecha,razon_rechazo):
-        self.numero = numero
-        self.cliente = cliente
-        self.tipo_operacion = tipo_operacion
+    def __init__(self, estado, tipo, cuentaNumero, monto, fecha, numero, saldoEnCuenta, totalTarjetasDeCreditoActualmente, totalChequerasActualmente):
         self.estado = estado
-        self.monto = monto 
-        self.fecha = fecha 
-        self.razon_rechazo = razon_rechazo
+        self.tipo = tipo
+        self.cuentaNumero = cuentaNumero
+        self.monto = monto
+        self.fecha = fecha
+        self.numero = numero
+        self.saldoEnCuenta = saldoEnCuenta
+        self.total_tarjetas_de_credito = totalTarjetasDeCreditoActualmente
+        self.total_chequeras = totalChequerasActualmente
+
+    def chequeo_retiro(self, cliente):
+        # Chequeo de monto máximo para retiros
+        if cliente.tipo == "CLASSIC":
+            if self.monto > 10000:
+                return "RECHAZADA", "Monto máximo para Classic superado."
+        elif cliente.tipo == "GOLD":
+            if self.monto > 20000:
+                return "RECHAZADA", "Monto máximo para Gold superado."
+        elif cliente.tipo == "BLACK":
+            if self.monto > 100000:
+                return "RECHAZADA", "Monto máximo para Black superado."
+        return "ACEPTADA", ""
+
+    def chequeo_alta_tarjeta(self, cliente):
+        # Chequeo de cantidad máxima de tarjetas de crédito
+        if cliente.tipo == "CLASSIC":
+            return "RECHAZADA", "Clientes Classic no pueden tener tarjetas de crédito."
+        elif cliente.tipo == "GOLD":
+            if cliente.total_tarjetas_de_credito >= 1:
+                return "RECHAZADA", "Máximo de tarjetas de crédito alcanzado para Gold."
+        elif cliente.tipo == "BLACK":
+            if cliente.total_tarjetas_de_credito >= 5:
+                return "RECHAZADA", "Máximo de tarjetas de crédito alcanzado para Black."
+        return "ACEPTADA", ""
     
-    def es_aceptada(self):
-        return self.estado == "aceptado"
+    def chequeo_alta_chequera(self, cliente):
+        # Chequeo de cantidad máxima de chequeras
+        if cliente.tipo == "CLASSIC":
+            return "RECHAZADA", "Clientes Classic no pueden tener chequeras."
+        elif cliente.tipo == "GOLD":
+            if cliente.total_chequeras >= 1:
+                return "RECHAZADA", "Máximo de chequeras alcanzado para Gold."
+        elif cliente.tipo == "BLACK":
+            if cliente.total_chequeras >= 2:
+                return "RECHAZADA", "Máximo de chequeras alcanzado para Black."
+        return "ACEPTADA", ""
     
-    def es_rechazada(self):
-        return self.estado == "rechazado"
+    def chequeo_comprar_dolar(self, cliente):
+        if cliente.saldo_en_dolares <= 0:
+            return "RECHAZADA", "Saldo en dólares insuficiente."
+        return "ACEPTADA", ""
     
-class Reporte:
-    def __init__(self,transacciones):
-        self.transacciones = transacciones
-    
-    def generar_resumen(self):
-        aceptadas = [t for t in self.transacciones if t.es_aceptada()]
-        rechazadas = [t for t in self.transacciones if t.es_rechazada()]
-        return {"aceptadas": aceptadas, "rechazadas": rechazadas}
-    
-    def get_transacciones_por_cliente(self,dni):
-        return [t for t in self.transacciones if t.cliente.dni == dni]
+    def chequeo_transferencia_enviada(self, cliente):
+        comision = 0
+        if cliente.tipo == "CLASSIC":
+            comision = 0.01  # 1%
+        elif cliente.tipo == "GOLD":
+            comision = 0.005  # 0.5%
+        if cliente.saldo_en_cuenta < (self.monto + (self.monto * comision)):
+            return "RECHAZADA", "Saldo insuficiente para la transferencia."
+        return "ACEPTADA", ""
+
+    def chequeo_transferencia_recibida(self, cliente):
+        # Implementar lógica según los requisitos
+        return "ACEPTADA", ""
+
+    def obtener_razon_rechazo(self, cliente):
+        if self.estado == "RECHAZADA":
+            if self.tipo == "ALTA_CHEQUERA":
+                estado, razon = self.chequeo_alta_chequera(cliente)
+                return razon
+            if self.tipo == "ALTA_TARJETA_CREDITO":
+                estado, razon = self.chequeo_alta_tarjeta(cliente)
+                return razon
+            if self.tipo == "RETIRO_EFECTIVO_CAJERO_AUTOMATICO":
+                estado, razon = self.chequeo_retiro(cliente)
+                return razon
+            if self.tipo == "COMPRAR_DOLAR":
+                estado, razon = self.chequeo_comprar_dolar(cliente)
+                return razon
+            if self.tipo == "TRANSFERENCIA_ENVIADA":
+                estado, razon = self.chequeo_transferencia_enviada(cliente)
+                return razon
+        return ""
 
 class GeneradorHTML:
-    def __init__(self, reporte):
-        self.reporte = reporte
-    
-    def generar_html(self,archivo_salida):
-        resumen = self.reporte.generar_resumen()
-        
-        html_content = "<html><head><Title>Reporte de Transacciones</title></head><body>"
-        html_content += "<h1>Reporte de transacciones del TPS</h1>"
-        
-        html_content += "<h2>Transacciones aceptadas</h2>"
-        for t in resumen["aceptadas"]:
-            html_content += f"<p>{t.fecha}: {t.tipo_operacion} - Monto: {t.monto}</p>"
-            
-        html_content += "<h2> Transacciones Rechazadas</h2>"
-        for t in resumen["rechazadas"]:
-            html_content += f"<p>{t.fecha}: {t.tipo_operacion} - Monto: {t.monto} - Razón: {t.razon_rechazo}</p>"
-        
-        html_content += "</body></html>"
-        
-        with open(archivo_salida, "w", encoding="utf-8") as file:
-            file.write(html_content)
+    @staticmethod
+    def generar(cliente):
+        html = f"<h1>Reporte de Transacciones de {cliente.nombre}</h1>"
+        for transaccion in cliente.transacciones:
+            html += f"<p>Transacción: {transaccion.tipo} - Estado: {transaccion.estado}</p>"
+            if transaccion.estado == "RECHAZADA":
+                razon_rechazo = transaccion.obtener_razon_rechazo(cliente)
+                html += f"<p>Razón de rechazo: {razon_rechazo}</p>"
+        with open('reporte_transacciones.html', 'w', encoding='utf-8') as file:  # Especificar codificación UTF-8
+            file.write(html)

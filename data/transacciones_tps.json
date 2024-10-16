@@ -1,30 +1,59 @@
 {
+  "numero": 1,
+  "nombre": "Nicolas",
+  "apellido": "Gastón",
+  "DNI": "29494777",
+  "tipo": "BLACK",
+  "totalTarjetasDeCreditoActualmente": 1,
+  "totalChequerasActualmente": 2,
   "transacciones": [
     {
-      "numero": "12345",
-      "cliente": {
-        "nombre": "Juan Perez",
-        "dni": "12345678",
-        "direccion": "Calle Falsa 123"
-      },
-      "tipo_operacion": "RETIRO_EFECTIVO_CAJERO_AUTOMATICO",
-      "estado": "rechazado",
-      "monto": 1500.5,
-      "fecha": "2024-10-10",
-      "razon_rechazo": "Fondos insuficientes"
+      "tipo": "RETIRO_EFECTIVO_CAJERO_AUTOMATICO",
+      "cuentaNumero": 190,
+      "monto": 100000,
+      "fecha": "10/10/2022 16:00:55",
+      "numero": 1,
+      "saldoEnCuenta": 10000
     },
     {
-      "numero": "12346",
-      "cliente": {
-        "nombre": "Jhon Doe",
-        "dni": "12345634",
-        "direccion": "Calle Falsa 243"
-      },
-      "tipo_operacion": "TRANSFERENCIA_ENVIADA",
-      "estado": "aceptado",
-      "monto": 750.5,
-      "fecha": "2024-10-11",
-      "razon_rechazo": ""
+      "tipo": "ALTA_TARJETA_CREDITO",
+      "cuentaNumero": 190,
+      "monto": 0,  
+      "fecha": "10/10/2022 16:00:55",
+      "numero": 2,
+      "saldoEnCuenta": 10000
+    },
+    {
+      "tipo": "ALTA_CHEQUERA",
+      "cuentaNumero": 190,
+      "monto": 0, 
+      "fecha": "10/10/2022 16:00:55",
+      "numero": 3,
+      "saldoEnCuenta": 10000
+    },
+    {
+      "tipo": "COMPRAR_DOLAR",
+      "cuentaNumero": 190,
+      "monto": 1000, 
+      "fecha": "10/10/2022 16:00:55",
+      "numero": 4,
+      "saldoEnCuenta": 10000
+    },
+    {
+      "tipo": "TRANSFERENCIA_ENVIADA",
+      "cuentaNumero": 190,
+      "monto": 20000,  
+      "fecha": "10/10/2022 16:00:55",
+      "numero": 5,
+      "saldoEnCuenta": 10000
+    },
+    {
+      "tipo": "TRANSFERENCIA_RECIBIDA",
+      "cuentaNumero": 190,
+      "monto": 150000, 
+      "fecha": "10/10/2022 16:00:55",
+      "numero": 6,
+      "saldoEnCuenta": 10000
     }
   ]
 }
