@@ -1,8 +1,9 @@
 {
   "numero": 1,
   "nombre": "Nicolas",
-  "apellido": "Gastón",
+  "apellido": "Gaston",
   "DNI": "29494777",
+  "direccion": "Calle falsa 123",
   "tipo": "BLACK",
   "totalTarjetasDeCreditoActualmente": 1,
   "totalChequerasActualmente": 2,
@@ -18,7 +19,7 @@
     {
       "tipo": "ALTA_TARJETA_CREDITO",
       "cuentaNumero": 190,
-      "monto": 0,  
+      "monto": 0,
       "fecha": "10/10/2022 16:00:55",
       "numero": 2,
       "saldoEnCuenta": 10000
@@ -26,7 +27,7 @@
     {
       "tipo": "ALTA_CHEQUERA",
       "cuentaNumero": 190,
-      "monto": 0, 
+      "monto": 0,
       "fecha": "10/10/2022 16:00:55",
       "numero": 3,
       "saldoEnCuenta": 10000
@@ -34,7 +35,7 @@
     {
       "tipo": "COMPRAR_DOLAR",
       "cuentaNumero": 190,
-      "monto": 1000, 
+      "monto": 1000,
       "fecha": "10/10/2022 16:00:55",
       "numero": 4,
       "saldoEnCuenta": 10000
@@ -42,7 +43,7 @@
     {
       "tipo": "TRANSFERENCIA_ENVIADA",
       "cuentaNumero": 190,
-      "monto": 20000,  
+      "monto": 20000,
       "fecha": "10/10/2022 16:00:55",
       "numero": 5,
       "saldoEnCuenta": 10000
@@ -50,7 +51,7 @@
     {
       "tipo": "TRANSFERENCIA_RECIBIDA",
       "cuentaNumero": 190,
-      "monto": 150000, 
+      "monto": 150000,
       "fecha": "10/10/2022 16:00:55",
       "numero": 6,
       "saldoEnCuenta": 10000

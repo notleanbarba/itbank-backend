@@ -1,16 +1,19 @@
 from modules.tps import Cliente, Transaccion, GeneradorHTML
+import json
+
 
 def procesar_transacciones(json_filepath):
-    import json
     
     with open(json_filepath) as file:
         data = json.load(file)
     
     # Crear cliente
     cliente = Cliente(
+        numero=data["numero"],
         nombre=data["nombre"],
         apellido=data["apellido"],
         dni=data["DNI"],
+        direccion=data["direccion"],
         tipo=data["tipo"],
         total_tarjetas_de_credito=data["totalTarjetasDeCreditoActualmente"],
         total_chequeras=data["totalChequerasActualmente"],

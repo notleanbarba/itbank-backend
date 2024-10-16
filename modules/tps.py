@@ -1,8 +1,10 @@
 class Cliente:
-    def __init__(self, nombre, apellido, dni, tipo, total_tarjetas_de_credito, total_chequeras, saldo_en_cuenta, saldo_en_dolares, transacciones):
+    def __init__(self,numero, nombre, apellido, dni,direccion, tipo, total_tarjetas_de_credito, total_chequeras, saldo_en_cuenta, saldo_en_dolares, transacciones):
+        self.numero = numero
         self.nombre = nombre
         self.apellido = apellido
         self.dni = dni
+        self.direccion = direccion
         self.tipo = tipo
         self.total_tarjetas_de_credito = total_tarjetas_de_credito
         self.total_chequeras = total_chequeras
@@ -48,7 +50,7 @@ class Transaccion:
         return "ACEPTADA", ""
     
     def chequeo_alta_chequera(self, cliente):
-        # Chequeo de cantidad máxima de chequeras
+        # Verify 
         if cliente.tipo == "CLASSIC":
             return "RECHAZADA", "Clientes Classic no pueden tener chequeras."
         elif cliente.tipo == "GOLD":
@@ -75,7 +77,6 @@ class Transaccion:
         return "ACEPTADA", ""
 
     def chequeo_transferencia_recibida(self, cliente):
-        # Implementar lógica según los requisitos
         return "ACEPTADA", ""
 
     def obtener_razon_rechazo(self, cliente):
@@ -100,11 +101,11 @@ class Transaccion:
 class GeneradorHTML:
     @staticmethod
     def generar(cliente):
-        html = f"<h1>Reporte de Transacciones de {cliente.nombre}</h1>"
+        html = f"<h1>Reporte de Transacciones</h1> <span>Nombre: {cliente.nombre} {cliente.apellido} | Numero: {cliente.numero} | DNI: {cliente.dni} | Direccion:{cliente.direccion} | Tipo: {cliente.tipo}</span>"
         for transaccion in cliente.transacciones:
-            html += f"<p>Transacción: {transaccion.tipo} - Estado: {transaccion.estado}</p>"
+            html += f"<p>Transacción: {transaccion.tipo} - Fecha: {transaccion.fecha} - Estado: {transaccion.estado}</p>"
             if transaccion.estado == "RECHAZADA":
                 razon_rechazo = transaccion.obtener_razon_rechazo(cliente)
                 html += f"<p>Razón de rechazo: {razon_rechazo}</p>"
-        with open('reporte_transacciones.html', 'w', encoding='utf-8') as file:  # Especificar codificación UTF-8
+        with open('Reportes/reporte_transacciones.html', 'w', encoding='utf-8') as file:
             file.write(html)
