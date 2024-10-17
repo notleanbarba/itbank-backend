@@ -1,3 +1,5 @@
+import os
+
 class Cliente:
     def __init__(self,numero, nombre, apellido, dni,direccion, tipo, total_tarjetas_de_credito, total_chequeras, saldo_en_cuenta, saldo_en_dolares, transacciones):
         self.numero = numero
@@ -13,7 +15,7 @@ class Cliente:
         self.transacciones = transacciones
 
 class Transaccion:
-    def __init__(self, estado, tipo, cuentaNumero, monto, fecha, numero, saldoEnCuenta, totalTarjetasDeCreditoActualmente, totalChequerasActualmente):
+    def __init__(self, estado, tipo, cuentaNumero, monto, fecha, numero, saldoEnCuenta, totalTarjetasDeCreditoActualmente, totalChequerasActualmente,razon_rechazo=""):
         self.estado = estado
         self.tipo = tipo
         self.cuentaNumero = cuentaNumero
@@ -23,18 +25,15 @@ class Transaccion:
         self.saldoEnCuenta = saldoEnCuenta
         self.total_tarjetas_de_credito = totalTarjetasDeCreditoActualmente
         self.total_chequeras = totalChequerasActualmente
+        self.razon_rechazo = razon_rechazo
 
     def chequeo_retiro(self, cliente):
-        # Chequeo de monto máximo para retiros
-        if cliente.tipo == "CLASSIC":
-            if self.monto > 10000:
-                return "RECHAZADA", "Monto máximo para Classic superado."
-        elif cliente.tipo == "GOLD":
-            if self.monto > 20000:
-                return "RECHAZADA", "Monto máximo para Gold superado."
-        elif cliente.tipo == "BLACK":
-            if self.monto > 100000:
-                return "RECHAZADA", "Monto máximo para Black superado."
+        if cliente.tipo == "CLASSIC" and self.monto > 10000:
+            return "RECHAZADA", "Monto máximo para Classic superado."
+        elif cliente.tipo == "GOLD" and self.monto > 20000:
+            return "RECHAZADA", "Monto máximo para Gold superado."
+        elif cliente.tipo == "BLACK" and self.monto > 100000:
+            return "RECHAZADA", "Monto máximo para Black superado."
         return "ACEPTADA", ""
 
     def chequeo_alta_tarjeta(self, cliente):
@@ -62,9 +61,10 @@ class Transaccion:
         return "ACEPTADA", ""
     
     def chequeo_comprar_dolar(self, cliente):
-        if cliente.saldo_en_dolares <= 0:
-            return "RECHAZADA", "Saldo en dólares insuficiente."
+        if cliente.saldo_en_cuenta < self.monto:
+            return "RECHAZADA", "Saldo en cuenta insuficiente para comprar dólares."
         return "ACEPTADA", ""
+
     
     def chequeo_transferencia_enviada(self, cliente):
         comision = 0
@@ -80,28 +80,12 @@ class Transaccion:
         return "ACEPTADA", ""
 
     def obtener_razon_rechazo(self, cliente):
-        if self.estado == "RECHAZADA":
-            if self.tipo == "ALTA_CHEQUERA":
-                estado, razon = self.chequeo_alta_chequera(cliente)
-                return razon
-            if self.tipo == "ALTA_TARJETA_CREDITO":
-                estado, razon = self.chequeo_alta_tarjeta(cliente)
-                return razon
-            if self.tipo == "RETIRO_EFECTIVO_CAJERO_AUTOMATICO":
-                estado, razon = self.chequeo_retiro(cliente)
-                return razon
-            if self.tipo == "COMPRAR_DOLAR":
-                estado, razon = self.chequeo_comprar_dolar(cliente)
-                return razon
-            if self.tipo == "TRANSFERENCIA_ENVIADA":
-                estado, razon = self.chequeo_transferencia_enviada(cliente)
-                return razon
-        return ""
+        return self.razon_rechazo
 
 class GeneradorHTML:
     @staticmethod
     def generar(cliente):
-        # Crear contenido HTML con diseño refinado y elegante
+            
         html = f"""
         <!DOCTYPE html>
         <html lang="es">
@@ -205,7 +189,7 @@ class GeneradorHTML:
                     <p><strong>DNI:</strong> {cliente.dni}</p>
                     <p><strong>Dirección:</strong> {cliente.direccion}</p>
                     <p><strong>Tipo de Cliente:</strong> {cliente.tipo}</p>
-                    <p><strong>Saldo en Cuenta:</strong> ${cliente.saldo_en_cuenta}</p>
+                    <p><strong>Saldo en Cuenta:</strong> ${cliente.saldo_en_cuenta:.2f}</p>
                     <p><strong>Saldo en Dólares:</strong> ${cliente.saldo_en_dolares}</p>
                 </div>
 
@@ -221,13 +205,32 @@ class GeneradorHTML:
         """
 
         for transaccion in cliente.transacciones:
+            if transaccion.tipo == "RETIRO_EFECTIVO_CAJERO_AUTOMATICO":
+                estado, razon = transaccion.chequeo_retiro(cliente)
+            elif transaccion.tipo == "ALTA_TARJETA_CREDITO":
+                estado, razon = transaccion.chequeo_alta_tarjeta(cliente)
+            elif transaccion.tipo == "ALTA_CHEQUERA":
+                estado, razon = transaccion.chequeo_alta_chequera(cliente)
+            elif transaccion.tipo == "COMPRAR_DOLAR":
+                estado, razon = transaccion.chequeo_comprar_dolar(cliente)
+            elif transaccion.tipo == "TRANSFERENCIA_ENVIADA":
+                estado, razon = transaccion.chequeo_transferencia_enviada(cliente)
+            elif transaccion.tipo == "TRANSFERENCIA_RECIBIDA":
+                estado, razon = transaccion.chequeo_transferencia_recibida(cliente)
+            else:
+                estado, razon = "DESCONOCIDO", "Tipo de transacción no reconocido"
+
+            transaccion.estado = estado
+            transaccion.razon_rechazo = razon if estado == "RECHAZADA" else ""
+
             estado_clase = "approved" if transaccion.estado == "ACEPTADA" else "rejected"
-            razon_rechazo = transaccion.obtener_razon_rechazo(cliente) if transaccion.estado == "RECHAZADA" else "N/A"
+            razon_rechazo = transaccion.razon_rechazo if transaccion.estado == "RECHAZADA" else "N/A"
+
             html += f"""
             <tr>
                 <td>{transaccion.tipo}</td>
                 <td>{transaccion.fecha}</td>
-                <td>${transaccion.monto}</td>
+                <td>${transaccion.monto:.2f}</td>
                 <td class="{estado_clase}">{transaccion.estado}</td>
                 <td>{razon_rechazo}</td>
             </tr>
@@ -244,7 +247,7 @@ class GeneradorHTML:
         </body>
         </html>
         """
-
-        # Guardar el archivo HTML
-        with open('Reportes/reporte_transacciones.html', 'w', encoding='utf-8') as file:
+        if not os.path.exists('Reportes'):
+            os.makedirs('Reportes')
+        with open(f'Reportes/reporte_transacciones_cliente_{cliente.numero}.html', 'w', encoding='utf-8') as file:
             file.write(html)
