@@ -1,21 +1,54 @@
 import os
 
-class Cliente:
-    def __init__(self,numero, nombre, apellido, dni,direccion, tipo, total_tarjetas_de_credito, total_chequeras, saldo_en_cuenta, saldo_en_dolares, transacciones):
+class ClienteBase:
+    def __init__(self, numero, nombre, apellido, dni, direccion, total_tarjetas_de_credito, total_chequeras, saldo_en_cuenta, saldo_en_dolares, transacciones):
         self.numero = numero
         self.nombre = nombre
         self.apellido = apellido
         self.dni = dni
         self.direccion = direccion
-        self.tipo = tipo
         self.total_tarjetas_de_credito = total_tarjetas_de_credito
         self.total_chequeras = total_chequeras
         self.saldo_en_cuenta = saldo_en_cuenta
         self.saldo_en_dolares = saldo_en_dolares
         self.transacciones = transacciones
 
+    def mostrar_informacion(self):
+        """Método para mostrar información básica del cliente"""
+        return f"Cliente {self.nombre} {self.apellido} - Tipo: {self.__class__.__name__}"
+
+class ClienteClassic(ClienteBase):
+    def limite_retiro(self):
+        return 10000
+    
+    def max_tarjetas_credito(self):
+        return 0
+    
+    def max_chequeras(self):
+        return 0
+
+class ClienteGold(ClienteBase):
+    def limite_retiro(self):
+        return 20000
+    
+    def max_tarjetas_credito(self):
+        return 1
+    
+    def max_chequeras(self):
+        return 1
+
+class ClienteBlack(ClienteBase):
+    def limite_retiro(self):
+        return 100000
+    
+    def max_tarjetas_credito(self):
+        return 5
+    
+    def max_chequeras(self):
+        return 2
+
 class Transaccion:
-    def __init__(self, estado, tipo, cuentaNumero, monto, fecha, numero, saldoEnCuenta, totalTarjetasDeCreditoActualmente, totalChequerasActualmente,razon_rechazo=""):
+    def __init__(self, estado, tipo, cuentaNumero, monto, fecha, numero, saldoEnCuenta, totalTarjetasDeCreditoActualmente, totalChequerasActualmente, razon_rechazo=""):
         self.estado = estado
         self.tipo = tipo
         self.cuentaNumero = cuentaNumero
@@ -27,37 +60,34 @@ class Transaccion:
         self.total_chequeras = totalChequerasActualmente
         self.razon_rechazo = razon_rechazo
 
+    def aplicar_chequeos(self, cliente):
+        if self.tipo == "RETIRO_EFECTIVO_CAJERO_AUTOMATICO":
+            return self.chequeo_retiro(cliente)
+        elif self.tipo == "ALTA_TARJETA_CREDITO":
+            return self.chequeo_alta_tarjeta(cliente)
+        elif self.tipo == "ALTA_CHEQUERA":
+            return self.chequeo_alta_chequera(cliente)
+        elif self.tipo == "COMPRAR_DOLAR":
+            return self.chequeo_comprar_dolar(cliente)
+        elif self.tipo == "TRANSFERENCIA_ENVIADA":
+            return self.chequeo_transferencia_enviada(cliente)
+        elif self.tipo == "TRANSFERENCIA_RECIBIDA":
+            return self.chequeo_transferencia_recibida(cliente)
+        return "DESCONOCIDO", "Tipo de transacción no reconocido."
+
     def chequeo_retiro(self, cliente):
-        if cliente.tipo == "CLASSIC" and self.monto > 10000:
-            return "RECHAZADA", "Monto máximo para Classic superado."
-        elif cliente.tipo == "GOLD" and self.monto > 20000:
-            return "RECHAZADA", "Monto máximo para Gold superado."
-        elif cliente.tipo == "BLACK" and self.monto > 100000:
-            return "RECHAZADA", "Monto máximo para Black superado."
+        if self.monto > cliente.limite_retiro():
+            return "RECHAZADA", f"Monto máximo para {cliente.__class__.__name__} superado."
         return "ACEPTADA", ""
 
     def chequeo_alta_tarjeta(self, cliente):
-        # Chequeo de cantidad máxima de tarjetas de crédito
-        if cliente.tipo == "CLASSIC":
-            return "RECHAZADA", "Clientes Classic no pueden tener tarjetas de crédito."
-        elif cliente.tipo == "GOLD":
-            if cliente.total_tarjetas_de_credito >= 1:
-                return "RECHAZADA", "Máximo de tarjetas de crédito alcanzado para Gold."
-        elif cliente.tipo == "BLACK":
-            if cliente.total_tarjetas_de_credito >= 5:
-                return "RECHAZADA", "Máximo de tarjetas de crédito alcanzado para Black."
+        if cliente.total_tarjetas_de_credito >= cliente.max_tarjetas_credito():
+            return "RECHAZADA", f"Máximo de tarjetas de crédito alcanzado para {cliente.__class__.__name__}."
         return "ACEPTADA", ""
     
     def chequeo_alta_chequera(self, cliente):
-        # Verify 
-        if cliente.tipo == "CLASSIC":
-            return "RECHAZADA", "Clientes Classic no pueden tener chequeras."
-        elif cliente.tipo == "GOLD":
-            if cliente.total_chequeras >= 1:
-                return "RECHAZADA", "Máximo de chequeras alcanzado para Gold."
-        elif cliente.tipo == "BLACK":
-            if cliente.total_chequeras >= 2:
-                return "RECHAZADA", "Máximo de chequeras alcanzado para Black."
+        if cliente.total_chequeras >= cliente.max_chequeras():
+            return "RECHAZADA", f"Máximo de chequeras alcanzado para {cliente.__class__.__name__}."
         return "ACEPTADA", ""
     
     def chequeo_comprar_dolar(self, cliente):
@@ -65,13 +95,8 @@ class Transaccion:
             return "RECHAZADA", "Saldo en cuenta insuficiente para comprar dólares."
         return "ACEPTADA", ""
 
-    
     def chequeo_transferencia_enviada(self, cliente):
-        comision = 0
-        if cliente.tipo == "CLASSIC":
-            comision = 0.01  # 1%
-        elif cliente.tipo == "GOLD":
-            comision = 0.005  # 0.5%
+        comision = 0.01 if isinstance(cliente, ClienteClassic) else 0.005
         if cliente.saldo_en_cuenta < (self.monto + (self.monto * comision)):
             return "RECHAZADA", "Saldo insuficiente para la transferencia."
         return "ACEPTADA", ""
@@ -79,13 +104,9 @@ class Transaccion:
     def chequeo_transferencia_recibida(self, cliente):
         return "ACEPTADA", ""
 
-    def obtener_razon_rechazo(self, cliente):
-        return self.razon_rechazo
-
 class GeneradorHTML:
     @staticmethod
     def generar(cliente):
-            
         html = f"""
         <!DOCTYPE html>
         <html lang="es">
@@ -156,12 +177,6 @@ class GeneradorHTML:
                 .transaction-table tr:hover {{
                     background-color: #f1f3f4;
                 }}
-                .summary {{
-                    text-align: center;
-                    margin-top: 40px;
-                    color: #2c3e50;
-                    font-size: 16px;
-                }}
                 .footer {{
                     text-align: center;
                     margin-top: 40px;
@@ -188,9 +203,9 @@ class GeneradorHTML:
                     <p><strong>Número de Cuenta:</strong> {cliente.numero}</p>
                     <p><strong>DNI:</strong> {cliente.dni}</p>
                     <p><strong>Dirección:</strong> {cliente.direccion}</p>
-                    <p><strong>Tipo de Cliente:</strong> {cliente.tipo}</p>
+                    <p><strong>Tipo de Cliente:</strong> {cliente.__class__.__name__}</p>
                     <p><strong>Saldo en Cuenta:</strong> ${cliente.saldo_en_cuenta:.2f}</p>
-                    <p><strong>Saldo en Dólares:</strong> ${cliente.saldo_en_dolares}</p>
+                    <p><strong>Saldo en Dólares:</strong> ${cliente.saldo_en_dolares:.2f}</p>
                 </div>
 
                 <h2>Detalle de Transacciones</h2>
@@ -247,7 +262,9 @@ class GeneradorHTML:
         </body>
         </html>
         """
+        
         if not os.path.exists('Reportes'):
             os.makedirs('Reportes')
+        
         with open(f'Reportes/reporte_transacciones_cliente_{cliente.numero}.html', 'w', encoding='utf-8') as file:
             file.write(html)

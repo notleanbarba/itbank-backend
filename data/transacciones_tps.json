@@ -101,7 +101,7 @@
     "apellido": "Perez",
     "DNI": "32895467",
     "direccion": "Calle Secundaria 789",
-    "tipo": "PLATINUM",
+    "tipo": "GOLD",
     "totalTarjetasDeCreditoActualmente": 1,
     "totalChequerasActualmente": 0,
     "transacciones": [
@@ -200,6 +200,138 @@
         "fecha": "14/12/2022 13:15:00",
         "numero": 3,
         "saldoEnCuenta": 7000
+      }
+    ]
+  },
+  {
+    "numero": "6",
+    "nombre": "Ana",
+    "apellido": "Martinez",
+    "DNI": "40328765",
+    "direccion": "Calle Verde 800",
+    "tipo": "CLASSIC",
+    "totalTarjetasDeCreditoActualmente": 0,
+    "totalChequerasActualmente": 0,
+    "transacciones": [
+      {
+        "tipo": "RETIRO_EFECTIVO_CAJERO_AUTOMATICO",
+        "cuentaNumero": 601,
+        "monto": 15000,
+        "fecha": "15/01/2023 10:45:00",
+        "numero": 1,
+        "saldoEnCuenta": 15000
+      },
+      {
+        "tipo": "COMPRAR_DOLAR",
+        "cuentaNumero": 601,
+        "monto": 5000,
+        "fecha": "15/01/2023 12:30:00",
+        "numero": 2,
+        "saldoEnCuenta": 15000
+      },
+      {
+        "tipo": "TRANSFERENCIA_ENVIADA",
+        "cuentaNumero": 601,
+        "monto": 3000,
+        "fecha": "15/01/2023 13:15:00",
+        "numero": 3,
+        "saldoEnCuenta": 10000
+      },
+      {
+        "tipo": "ALTA_TARJETA_CREDITO",
+        "cuentaNumero": 601,
+        "monto": 0,
+        "fecha": "15/01/2023 14:45:00",
+        "numero": 4,
+        "saldoEnCuenta": 10000
+      }
+    ]
+  },
+  {
+    "numero": "7",
+    "nombre": "Jorge",
+    "apellido": "Sosa",
+    "DNI": "38745612",
+    "direccion": "Av. de los Incas 750",
+    "tipo": "GOLD",
+    "totalTarjetasDeCreditoActualmente": 3,
+    "totalChequerasActualmente": 1,
+    "transacciones": [
+      {
+        "tipo": "RETIRO_EFECTIVO_CAJERO_AUTOMATICO",
+        "cuentaNumero": 701,
+        "monto": 30000,
+        "fecha": "05/02/2023 09:20:00",
+        "numero": 1,
+        "saldoEnCuenta": 40000
+      },
+      {
+        "tipo": "COMPRAR_DOLAR",
+        "cuentaNumero": 701,
+        "monto": 2000,
+        "fecha": "05/02/2023 11:00:00",
+        "numero": 2,
+        "saldoEnCuenta": 40000
+      },
+      {
+        "tipo": "TRANSFERENCIA_RECIBIDA",
+        "cuentaNumero": 701,
+        "monto": 8000,
+        "fecha": "05/02/2023 15:00:00",
+        "numero": 3,
+        "saldoEnCuenta": 8000
+      },
+      {
+        "tipo": "ALTA_CHEQUERA",
+        "cuentaNumero": 701,
+        "monto": 0,
+        "fecha": "05/02/2023 18:30:00",
+        "numero": 4,
+        "saldoEnCuenta": 8000
+      }
+    ]
+  },
+  {
+    "numero": "8",
+    "nombre": "Lucas",
+    "apellido": "Gomez",
+    "DNI": "37123456",
+    "direccion": "Pasaje Azul 123",
+    "tipo": "BLACK",
+    "totalTarjetasDeCreditoActualmente": 2,
+    "totalChequerasActualmente": 2,
+    "transacciones": [
+      {
+        "tipo": "TRANSFERENCIA_ENVIADA",
+        "cuentaNumero": 801,
+        "monto": 100000,
+        "fecha": "20/02/2023 11:00:00",
+        "numero": 1,
+        "saldoEnCuenta": 150000
+      },
+      {
+        "tipo": "RETIRO_EFECTIVO_CAJERO_AUTOMATICO",
+        "cuentaNumero": 801,
+        "monto": 50000,
+        "fecha": "20/02/2023 12:00:00",
+        "numero": 2,
+        "saldoEnCuenta": 50000
+      },
+      {
+        "tipo": "ALTA_TARJETA_CREDITO",
+        "cuentaNumero": 801,
+        "monto": 0,
+        "fecha": "20/02/2023 14:00:00",
+        "numero": 3,
+        "saldoEnCuenta": 50000
+      },
+      {
+        "tipo": "TRANSFERENCIA_RECIBIDA",
+        "cuentaNumero": 801,
+        "monto": 20000,
+        "fecha": "20/02/2023 16:00:00",
+        "numero": 4,
+        "saldoEnCuenta": 70000
       }
     ]
   }
