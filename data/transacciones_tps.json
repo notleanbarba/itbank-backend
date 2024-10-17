@@ -1,60 +1,206 @@
-{
-  "numero": 1,
-  "nombre": "Nicolas",
-  "apellido": "Gaston",
-  "DNI": "29494777",
-  "direccion": "Calle falsa 123",
-  "tipo": "BLACK",
-  "totalTarjetasDeCreditoActualmente": 1,
-  "totalChequerasActualmente": 2,
-  "transacciones": [
-    {
-      "tipo": "RETIRO_EFECTIVO_CAJERO_AUTOMATICO",
-      "cuentaNumero": 190,
-      "monto": 100000,
-      "fecha": "10/10/2022 16:00:55",
-      "numero": 1,
-      "saldoEnCuenta": 10000
-    },
-    {
-      "tipo": "ALTA_TARJETA_CREDITO",
-      "cuentaNumero": 190,
-      "monto": 0,
-      "fecha": "10/10/2022 16:00:55",
-      "numero": 2,
-      "saldoEnCuenta": 10000
-    },
-    {
-      "tipo": "ALTA_CHEQUERA",
-      "cuentaNumero": 190,
-      "monto": 0,
-      "fecha": "10/10/2022 16:00:55",
-      "numero": 3,
-      "saldoEnCuenta": 10000
-    },
-    {
-      "tipo": "COMPRAR_DOLAR",
-      "cuentaNumero": 190,
-      "monto": 1000,
-      "fecha": "10/10/2022 16:00:55",
-      "numero": 4,
-      "saldoEnCuenta": 10000
-    },
-    {
-      "tipo": "TRANSFERENCIA_ENVIADA",
-      "cuentaNumero": 190,
-      "monto": 20000,
-      "fecha": "10/10/2022 16:00:55",
-      "numero": 5,
-      "saldoEnCuenta": 10000
-    },
-    {
-      "tipo": "TRANSFERENCIA_RECIBIDA",
-      "cuentaNumero": 190,
-      "monto": 150000,
-      "fecha": "10/10/2022 16:00:55",
-      "numero": 6,
-      "saldoEnCuenta": 10000
-    }
-  ]
-}
+[
+  {
+    "numero": "1",
+    "nombre": "Nicolas",
+    "apellido": "Gaston",
+    "DNI": "29494777",
+    "direccion": "Calle falsa 123",
+    "tipo": "BLACK",
+    "totalTarjetasDeCreditoActualmente": 1,
+    "totalChequerasActualmente": 2,
+    "transacciones": [
+      {
+        "tipo": "RETIRO_EFECTIVO_CAJERO_AUTOMATICO",
+        "cuentaNumero": 190,
+        "monto": 100000,
+        "fecha": "10/10/2022 16:00:55",
+        "numero": 1,
+        "saldoEnCuenta": 10000
+      },
+      {
+        "tipo": "ALTA_TARJETA_CREDITO",
+        "cuentaNumero": 190,
+        "monto": 0,
+        "fecha": "10/10/2022 16:00:55",
+        "numero": 2,
+        "saldoEnCuenta": 10000
+      },
+      {
+        "tipo": "ALTA_CHEQUERA",
+        "cuentaNumero": 190,
+        "monto": 0,
+        "fecha": "10/10/2022 16:00:55",
+        "numero": 3,
+        "saldoEnCuenta": 10000
+      },
+      {
+        "tipo": "COMPRAR_DOLAR",
+        "cuentaNumero": 190,
+        "monto": 1000,
+        "fecha": "10/10/2022 16:00:55",
+        "numero": 4,
+        "saldoEnCuenta": 10000
+      },
+      {
+        "tipo": "TRANSFERENCIA_ENVIADA",
+        "cuentaNumero": 190,
+        "monto": 20000,
+        "fecha": "10/10/2022 16:00:55",
+        "numero": 5,
+        "saldoEnCuenta": 10000
+      },
+      {
+        "tipo": "TRANSFERENCIA_RECIBIDA",
+        "cuentaNumero": 190,
+        "monto": 150000,
+        "fecha": "10/10/2022 16:00:55",
+        "numero": 6,
+        "saldoEnCuenta": 10000
+      }
+    ]
+  },
+  {
+    "numero": "2",
+    "nombre": "Maria",
+    "apellido": "Fernandez",
+    "DNI": "31568921",
+    "direccion": "Av. Principal 456",
+    "tipo": "GOLD",
+    "totalTarjetasDeCreditoActualmente": 2,
+    "totalChequerasActualmente": 1,
+    "transacciones": [
+      {
+        "tipo": "ALTA_CHEQUERA",
+        "cuentaNumero": 201,
+        "monto": 0,
+        "fecha": "11/11/2022 10:15:00",
+        "numero": 1,
+        "saldoEnCuenta": 15000
+      },
+      {
+        "tipo": "RETIRO_EFECTIVO_CAJERO_AUTOMATICO",
+        "cuentaNumero": 201,
+        "monto": 5000,
+        "fecha": "11/11/2022 12:30:00",
+        "numero": 2,
+        "saldoEnCuenta": 10000
+      },
+      {
+        "tipo": "COMPRAR_DOLAR",
+        "cuentaNumero": 201,
+        "monto": 2000,
+        "fecha": "11/11/2022 14:45:00",
+        "numero": 3,
+        "saldoEnCuenta": 8000
+      }
+    ]
+  },
+  {
+    "numero": "3",
+    "nombre": "Juan",
+    "apellido": "Perez",
+    "DNI": "32895467",
+    "direccion": "Calle Secundaria 789",
+    "tipo": "PLATINUM",
+    "totalTarjetasDeCreditoActualmente": 1,
+    "totalChequerasActualmente": 0,
+    "transacciones": [
+      {
+        "tipo": "TRANSFERENCIA_RECIBIDA",
+        "cuentaNumero": 305,
+        "monto": 50000,
+        "fecha": "12/12/2022 09:00:00",
+        "numero": 1,
+        "saldoEnCuenta": 50000
+      },
+      {
+        "tipo": "TRANSFERENCIA_ENVIADA",
+        "cuentaNumero": 305,
+        "monto": 10000,
+        "fecha": "12/12/2022 10:00:00",
+        "numero": 2,
+        "saldoEnCuenta": 40000
+      },
+      {
+        "tipo": "ALTA_TARJETA_CREDITO",
+        "cuentaNumero": 305,
+        "monto": 0,
+        "fecha": "12/12/2022 11:30:00",
+        "numero": 3,
+        "saldoEnCuenta": 40000
+      }
+    ]
+  },
+  {
+    "numero": "4",
+    "nombre": "Laura",
+    "apellido": "Gomez",
+    "DNI": "30214789",
+    "direccion": "Barrio Norte 321",
+    "tipo": "CLASSIC",
+    "totalTarjetasDeCreditoActualmente": 0,
+    "totalChequerasActualmente": 0,
+    "transacciones": [
+      {
+        "tipo": "RETIRO_EFECTIVO_CAJERO_AUTOMATICO",
+        "cuentaNumero": 412,
+        "monto": 3000,
+        "fecha": "13/12/2022 15:20:00",
+        "numero": 1,
+        "saldoEnCuenta": 7000
+      },
+      {
+        "tipo": "COMPRAR_DOLAR",
+        "cuentaNumero": 412,
+        "monto": 1000,
+        "fecha": "13/12/2022 16:45:00",
+        "numero": 2,
+        "saldoEnCuenta": 6000
+      },
+      {
+        "tipo": "TRANSFERENCIA_RECIBIDA",
+        "cuentaNumero": 412,
+        "monto": 10000,
+        "fecha": "13/12/2022 17:30:00",
+        "numero": 3,
+        "saldoEnCuenta": 16000
+      }
+    ]
+  },
+  {
+    "numero": "5",
+    "nombre": "Carlos",
+    "apellido": "Lopez",
+    "DNI": "33987654",
+    "direccion": "Pasaje Sur 987",
+    "tipo": "GOLD",
+    "totalTarjetasDeCreditoActualmente": 1,
+    "totalChequerasActualmente": 1,
+    "transacciones": [
+      {
+        "tipo": "ALTA_TARJETA_CREDITO",
+        "cuentaNumero": 523,
+        "monto": 0,
+        "fecha": "14/12/2022 09:30:00",
+        "numero": 1,
+        "saldoEnCuenta": 20000
+      },
+      {
+        "tipo": "TRANSFERENCIA_ENVIADA",
+        "cuentaNumero": 523,
+        "monto": 8000,
+        "fecha": "14/12/2022 11:00:00",
+        "numero": 2,
+        "saldoEnCuenta": 12000
+      },
+      {
+        "tipo": "RETIRO_EFECTIVO_CAJERO_AUTOMATICO",
+        "cuentaNumero": 523,
+        "monto": 5000,
+        "fecha": "14/12/2022 13:15:00",
+        "numero": 3,
+        "saldoEnCuenta": 7000
+      }
+    ]
+  }
+]
