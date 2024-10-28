@@ -1,0 +1,30 @@
+{
+  "transacciones": [
+    {
+      "numero": "12345",
+      "cliente": {
+        "nombre": "Juan Perez",
+        "dni": "12345678",
+        "direccion": "Calle Falsa 123"
+      },
+      "tipo_operacion": "RETIRO_EFECTIVO_CAJERO_AUTOMATICO",
+      "estado": "rechazado",
+      "monto": 1500.5,
+      "fecha": "2024-10-10",
+      "razon_rechazo": "Fondos insuficientes"
+    },
+    {
+      "numero": "12346",
+      "cliente": {
+        "nombre": "Jhon Doe",
+        "dni": "12345634",
+        "direccion": "Calle Falsa 243"
+      },
+      "tipo_operacion": "TRANSFERENCIA_ENVIADA",
+      "estado": "aceptado",
+      "monto": 750.5,
+      "fecha": "2024-10-11",
+      "razon_rechazo": ""
+    }
+  ]
+}
