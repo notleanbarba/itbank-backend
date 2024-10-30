@@ -1,3 +1,19 @@
+--Crear tipos de cliente, cuenta y marcas de tarjeta.
+CREATE TABLE IF NOT EXISTS tipos_cliente (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre VARCHAR(50) UNIQUE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS tipos_cuenta (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre VARCHAR(50) UNIQUE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS marcas_tarjeta (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre VARCHAR(50) UNIQUE NOT NULL
+);
+
 --update a empleados para cambiar employee_hire_date a YYYY-MM-DD
 UPDATE employees
 SET hire_date = 
@@ -123,3 +139,19 @@ INSERT INTO cards (customer_id, card_number, cvv, issue_date, expiration_date) V
 (98, "8888999900002231", "579", "02/38", "11/38"),
 (99, "9999000011113342", "680", "03/38", "12/38"),
 (100, "0000111122224453", "791", "04/38", "01/39");
+
+--Agregar la entidad "direcciones" para clientes, empleados y sucursales
+
+CREATE TABLE IF NOT EXISTS direcciones (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    calle VARCHAR(100) NOT NULL,
+    ciudad VARCHAR(50) NOT NULL,
+    provincia VARCHAR(50) NOT NULL,
+    pais VARCHAR(50) NOT NULL,
+    cliente_numero INTEGER,
+    empleado_id INTEGER,
+    sucursal_id INTEGER,
+    FOREIGN KEY (cliente_numero) REFERENCES clientes(numero),
+    FOREIGN KEY (empleado_id) REFERENCES empleados(id),
+    FOREIGN KEY (sucursal_id) REFERENCES sucursales(id)
+);
