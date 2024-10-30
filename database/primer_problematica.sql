@@ -1,27 +1,28 @@
 --update a empleados para cambiar employee_hire_date a YYYY-MM-DD
-UPDATE empleado
-SET employee_hire_date = 
-    SUBSTR(employee_hire_date, 7, 4) || '-' || 
-    SUBSTR(employee_hire_date, 4, 2) || '-' || 
-    SUBSTR(employee_hire_date, 1, 2)
-WHERE employee_hire_date LIKE '__-__-____';
+UPDATE employees
+SET hire_date = 
+    SUBSTR(hire_date, 7, 4) || '-' || 
+    SUBSTR(hire_date, 4, 2) || '-' || 
+    SUBSTR(hire_date, 1, 2)
+WHERE hire_date LIKE '__-__-____';
 
 --borra la tabla tarjeta
-DROP TABLE IF EXISTS tarjeta;
+DROP TABLE IF EXISTS cards;
 --crea la tabla tarjeta con sus componentes
-CREATE TABLE tarjeta (
-    tarjeta_id INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE cards (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     customer_id INTEGER NOT NULL,
-    numero TEXT UNIQUE NOT NULL CHECK (LENGTH(numero) <= 20),
+    card_number TEXT UNIQUE NOT NULL CHECK (LENGTH(numero) <= 20),
     cvv TEXT NOT NULL CHECK (LENGTH(cvv) = 3),
-    fechaOtorgacion varchar(5) NOT NULL CHECK (fechaOtorgacion GLOB '[0-1][0-9]/[0-9][0-9]'), 
-    fechaExpiracion varchar(5) NOT NULL CHECK (fechaOtorgacion GLOB '[0-1][0-9]/[0-9][0-9]'),  
-    FOREIGN KEY (customer_id) REFERENCES cliente(customer_id)
+    issue_date varchar(5) NOT NULL CHECK (issue_date GLOB '[0-1][0-9]/[0-9][0-9]'), 
+    expiration_date varchar(5) NOT NULL CHECK (expiration_date GLOB '[0-1][0-9]/[0-9][0-9]'),  
+    FOREIGN KEY (customer_id) REFERENCES customer(id)
 );
 --borra la info de clientes de tarjeta
-DELETE FROM tarjeta WHERE customer_id BETWEEN 1 AND 100;
+DELETE FROM cards WHERE customer_id BETWEEN 1 AND 100;
+
 --crea 100 tarjetas con cvv para 100 usuarios
-INSERT INTO tarjeta (customer_id, numero, cvv, fechaOtorgacion, fechaExpiracion) VALUES
+INSERT INTO cards (customer_id, card_number, cvv, issue_date, expiration_date) VALUES
 (1, "1111222233334444", "123", "01/30", "10/30"),
 (2, "2222333344445555", "456", "02/30", "11/30"),
 (3, "3333444455556666", "789", "03/30", "12/30"),
